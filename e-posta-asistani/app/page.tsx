@@ -126,7 +126,7 @@ export default function HomePage() {
                 ) : (
                   emails.map((email) => (
                     <Card key={email.id} className="group hover:border-primary transition-all duration-300">
-                      <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
+                      <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2 min-w-0">
                         <div className="grid gap-1 flex-1">
                           <CardTitle className="text-xl font-bold line-clamp-1">
                             {email.subject || "(Konu Yok)"}
@@ -136,12 +136,16 @@ export default function HomePage() {
                           </CardDescription>
                         </div>
                         
-                        <div className="flex flex-col items-end gap-2 ml-4">
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-sm text-gray-600 leading-relaxed line-clamp-3 italic min-w-0">
+                          {email.text}
+                        </p>
+                        <div className="mt-4 flex flex-col items-start gap-2">
                           <div className="text-xs text-muted-foreground font-mono">
                             {new Date(email.date).toLocaleDateString('tr-TR')}
                           </div>
-                          <Button 
-                            variant="outline" 
+                          <Button
                             size="sm"
                             onClick={() => runAnalysis(email)}
                             disabled={analyzingId === email.id}
@@ -149,20 +153,9 @@ export default function HomePage() {
                           >
                             {analyzingId === email.id ? "Analiz Ediliyor..." : "🪄 AI Analizi"}
                           </Button>
+
                         </div>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm text-gray-600 leading-relaxed line-clamp-3 italic">
-                          {email.text}
-                        </p>
-                        {results[email.id] && (
-                          <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-100 text-sm text-blue-800">
-                            <div className="flex items-center gap-2 mb-1 font-bold">
-                              <Sparkles className="w-4 h-4" /> AI Özeti:
-                            </div>
-                            {results[email.id]}
-                          </div>
-                        )}
+                        
                       </CardContent>
                     </Card>
                   ))
@@ -191,8 +184,17 @@ export default function HomePage() {
                   <div className="bg-muted p-3 rounded-2xl rounded-tl-none text-sm">
                     Merhaba! Size e-postalarınız hakkında nasıl yardımcı olabilirim?
                   </div>
-                </div>
-                {/* Chat mesajları buraya gelecek */}
+                </div >
+                {Object.entries(results).map(([emailId, analysis]) => (
+                  <div key={emailId} className="flex gap-3">
+                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                      <Sparkles className="w-4 h-4 text-primary" />
+                    </div>
+                    <div className="bg-muted p-3 rounded-2xl rounded-tl-none text-sm whitespace-pre-wrap">
+                      {analysis}
+                    </div>
+                  </div>
+                ))}
               </div>
             </ScrollArea>
           </SidebarContent>

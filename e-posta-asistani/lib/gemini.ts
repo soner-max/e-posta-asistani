@@ -5,14 +5,13 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export async function analyzeEmail(email: CleanEmail): Promise<string> {
   // En hızlı ve verimli model olan flash modelini seçiyoruz
-  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
 
   const prompt = `
     Sen profesyonel bir e-posta asistanisin. Aşağidaki maili analiz et:
     
     FROM: ${email.from}
     KONU: ${email.subject}
-    İÇERİK: ${email.text}
     TARİH: ${email.date}
 
 
